@@ -1,0 +1,34 @@
+items
+- sword
+    - does damage to enemies, takes 1 use to do so
+- hammer
+    - can break walls, takes 1 use to do so
+    - does heavy damage to enemies, takes 2 uses to do so
+- very big spray bottle(or an extinguisher)
+    - can put out fires, take 1 use to do so
+    - does weak damage and stuns enemies, takes 2 uses to do so
+
+
+map elements
+- if touch fire, player moves back 2 spaces and loses 15% of hp
+- if touch wall, cannot move past it
+- if touch hole, player falls down and loses a life
+
+idea to find object in map
+- double for loop to count the indices to find the row and the column
+- use == to check if the object in the 2d array is equal to the unique object of the class
+- once find true return the row and the column
+
+things left to do
+- make start map element and end map element (done)
+- add menu to show player info (stats, lives, hp, inventory) (done)
+- make 2 rooms
+- figure out how to do clear console stuff
+- add more things to tell the user stuff (done)
+
+
+
+gui stuff
+- move play with in the mapelement 2d array and
+then have the gui look at it and then change the jlabels accordindly
+

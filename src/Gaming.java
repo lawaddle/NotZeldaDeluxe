@@ -114,4 +114,11 @@ public class Gaming {
         }
     }
 
+    public MapElement[][] getRoom1() {
+        return room1;
+    }
+
+    public MapElement[][] getRoom2() {
+        return room2;
+    }
 }

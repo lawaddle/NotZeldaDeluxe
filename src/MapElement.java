@@ -3,6 +3,7 @@ public class MapElement {
     private String name;
     /** String of item display on map */
     private String mapDisplay;
+    private String img;
 
     /**
      * Initiates a map element object
@@ -10,10 +11,19 @@ public class MapElement {
      * @param name map element name
      * @param mapDisplay map element display on map
      */
-    public MapElement (String name, String mapDisplay)
+    public MapElement (String name, String mapDisplay, String img)
     {
         this.name = name;
         this.mapDisplay = mapDisplay;
+        this.img = img;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
     }
 
     /** Returns current name of item

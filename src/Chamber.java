@@ -19,6 +19,7 @@ public class Chamber {
     private int playerPosy;
     /** Player object*/
     private Player player;
+    private int input;
 
     /** Initializes chamber object
      *
@@ -527,5 +528,12 @@ public class Chamber {
         return burn;
     }
 
+    public int getInput()
+    {
+        return input;
+    }
 
+    public void setInput(int input) {
+        this.input = input;
+    }
 }

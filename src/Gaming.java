@@ -21,15 +21,23 @@ public class Gaming {
     private MapElement[][] room2;
     /** 2nd room of game*/
     private MapElement[][] room1;
+    private int currRoom;
+
 
     /** Initializes Gaming object
      *
      */
     public Gaming()
     {
+
+        currRoom = 1;
         player = new Player();
         makeRoom2();
         makeRoom1();
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 
     /** Plays whole game
@@ -40,10 +48,12 @@ public class Gaming {
         System.out.println("Game Start");
         System.out.println("Room 1 Start");
         Chamber chamber1 = new Chamber(room1, 0, 0, 3, 3, player);
+        currRoom =1;
         chamber1.game();
         if(!(player.isDead())) {
             System.out.println("Room 2 Start");
             Chamber chamber2 = new Chamber(room2, 0, 0, 4,7, player);
+            currRoom = 2;
             chamber2.game();
         }
         System.out.println("Game End");
@@ -120,5 +130,15 @@ public class Gaming {
 
     public MapElement[][] getRoom2() {
         return room2;
+    }
+
+    public int getCurrRoom() {
+        return currRoom;
+    }
+
+
+
+    public void setChamberInput(int input) {
+        chamber.setInput(input)
     }
 }

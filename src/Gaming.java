@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Gaming {
     /** Hole map element for game*/
     private HoleMapElement hole = new HoleMapElement();
@@ -22,6 +24,8 @@ public class Gaming {
     /** 2nd room of game*/
     private MapElement[][] room1;
     private int currRoom;
+    private ArrayList<Chamber> chambers;
+    private ArrayList<MapElement[][]> rooms;
 
 
     /** Initializes Gaming object
@@ -29,11 +33,14 @@ public class Gaming {
      */
     public Gaming()
     {
-
+        chambers = new ArrayList<>();
         currRoom = 1;
         player = new Player();
-        makeRoom2();
         makeRoom1();
+        makeRoom2();
+        rooms.add(room1);
+        rooms.add(room2);
+
     }
 
     public Player getPlayer() {
@@ -45,14 +52,26 @@ public class Gaming {
      */
     public void play()
     {
-        System.out.println("Game Start");
-        System.out.println("Room 1 Start");
         Chamber chamber1 = new Chamber(room1, 0, 0, 3, 3, player);
+        Chamber chamber2 = new Chamber(room2, 0, 0, 4,7, player);
+        chambers.add(chamber1);
+        chambers.add(chamber2);
+        System.out.println("Game Start");
+        for (int i = 1; i <= chambers.size(); i++) {
+            if(!(player.isDead()))
+            {
+                System.out.println("Room " + i + " Start");
+                currRoom = i;
+                Chamber currChamber = chambers.get(i-1);
+                currChamber.game();
+            }
+        }
+
+        System.out.println("Room 1 Start");
         currRoom =1;
         chamber1.game();
         if(!(player.isDead())) {
             System.out.println("Room 2 Start");
-            Chamber chamber2 = new Chamber(room2, 0, 0, 4,7, player);
             currRoom = 2;
             chamber2.game();
         }
@@ -132,13 +151,17 @@ public class Gaming {
         return room2;
     }
 
-    public int getCurrRoom() {
+    public int getCurrRoomNum() {
         return currRoom;
+    }
+
+    public MapElement[][] getCurrChamber(){
+        return (rooms.get(currRoom-1));
     }
 
 
 
     public void setChamberInput(int input) {
-        chamber.setInput(input)
+        chambers.get(currRoom-1).setInput(input);
     }
 }

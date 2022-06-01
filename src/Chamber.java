@@ -1,3 +1,4 @@
+import java.awt.event.KeyEvent;
 import java.util.Scanner;
 import java.util.ArrayList;
 
@@ -19,7 +20,7 @@ public class Chamber {
     private int playerPosy;
     /** Player object*/
     private Player player;
-    private int input;
+    private int input = KeyEvent.VK_UNDEFINED;
 
     /** Initializes chamber object
      *
@@ -356,6 +357,7 @@ public class Chamber {
      */
     public void wallMovement(int oldPosx, int oldPosy, int newPosx, int newPosy)
     {
+
         boolean stayStill = true;
         ArrayList<HammerItem> hammersInInven = player.hammersInInven();
         if(hammersInInven.size() != 0)

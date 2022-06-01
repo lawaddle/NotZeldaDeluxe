@@ -49,7 +49,7 @@ public class GUI implements KeyListener {
             MapElement[][] room = logic.getCurrChamber();
             for (int i = 0; i < logic.getCurrChamber().length; i++) {
                 for (int j = 0; j < logic.getCurrChamber()[0].length; j++) {
-                    room1[i][j] = new JLabel(new ImageIcon("src//placeholder.jpg"));
+                    room1[i][j] = new JLabel(new ImageIcon("src//placeholder.jpg"))
                 }
             }
         }
@@ -59,7 +59,7 @@ public class GUI implements KeyListener {
             MapElement[][] room = logic.getCurrChamber();
             for (int i = 0; i < logic.getCurrChamber().length; i++) {
                 for (int j = 0; j < logic.getCurrChamber()[0].length; j++) {
-                    room2[i][j] = new JLabel(new ImageIcon("src//placeholder.jpg"));
+                    room2[i][j] = new JLabel(new ImageIcon("src//placeholder.jpg"))
                 }
             }
         }

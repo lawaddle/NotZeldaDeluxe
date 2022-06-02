@@ -32,9 +32,8 @@ public class GUI implements KeyListener {
         frame = new JFrame("Nintendo don't sue me");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.addKeyListener(this);
-        updateRoom();
         updateGameScreen();
-        frame.add(gameScreen);
+        frame.add(gameScreen, BorderLayout.NORTH);
 
         frame.pack();
         frame.setVisible(true);
@@ -67,6 +66,7 @@ public class GUI implements KeyListener {
 
     public void updateGameScreen()
     {
+        updateRoom();
         int curRoom = logic.getCurrRoomNum();
         for (int i = 0; i < rooms.get(curRoom).length; i++) {
             for (int j = 0; j < rooms.get(curRoom)[0].length; j++) {

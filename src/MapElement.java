@@ -2,19 +2,19 @@ public class MapElement {
     /** name of item */
     private String name;
     /** String of item display on map */
-    private String mapDisplay;
+    private String consoleDisplay;
     private String img;
 
     /**
      * Initiates a map element object
      *
      * @param name map element name
-     * @param mapDisplay map element display on map
+     * @param consoleDisplay map element display on map
      */
-    public MapElement (String name, String mapDisplay, String img)
+    public MapElement (String name, String consoleDisplay, String img)
     {
         this.name = name;
-        this.mapDisplay = mapDisplay;
+        this.consoleDisplay = consoleDisplay;
         this.img = img;
     }
 
@@ -46,8 +46,8 @@ public class MapElement {
      *
      * @return map element display on map
      */
-    public String getMapDisplay() {
-        return mapDisplay;
+    public String getConsoleDisplay() {
+        return consoleDisplay;
     }
 
 

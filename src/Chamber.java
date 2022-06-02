@@ -136,7 +136,7 @@ public class Chamber {
                     System.out.print("  | ");
                 } else
                 {
-                    System.out.print(room[i][j].getMapDisplay() + " | ");
+                    System.out.print(room[i][j].getConsoleDisplay() + " | ");
                 }
             }
             System.out.println();
@@ -160,15 +160,13 @@ public class Chamber {
     {
 
         boolean lop = true;
-        String choice = "";
+        int choice = input;
         while (lop) {
             System.out.println("Where do you want to move? \n(U)p \n(D)own \n(L)eft \n(R)ight");
-            choice = sc.nextLine();
-            choice = choice.toLowerCase();
-            if(choice.equals("u") || choice.equals("up") || choice.equals("d") || choice.equals("down") || choice.equals("l") || choice.equals("left") || choice.equals("r") || choice.equals("right"))
+            if(choice == (KeyEvent.VK_UP) || choice == (KeyEvent.VK_DOWN) || choice == (KeyEvent.VK_RIGHT) || choice == (KeyEvent.VK_LEFT))
             {
                 lop = false;
-                choice = choice.substring(0,1);
+
             } else
             {
                 System.out.println("Invaild Option. Please pick again.");
@@ -178,13 +176,13 @@ public class Chamber {
         int oldPosy = playerPosy;
         int newPosx = playerPosx;
         int newPosy = playerPosy;
-        if(choice.equals("d"))
+        if(choice == (KeyEvent.VK_DOWN))
         {
             newPosx++;
-        } else if (choice.equals("u"))
+        } else if (choice == (KeyEvent.VK_UP))
         {
             newPosx--;
-        } else if (choice.equals("l"))
+        } else if (choice == (KeyEvent.VK_LEFT))
         {
             newPosy--;
         } else
@@ -220,13 +218,13 @@ public class Chamber {
             {
                 player.setHp(player.getHp()-3);
                 System.out.println("You got burned");
-                if(choice.equals("d"))
+                if(choice == (KeyEvent.VK_DOWN))
                 {
                     newPosx = newPosx - 2;
-                } else if (choice.equals("u"))
+                } else if (choice == (KeyEvent.VK_UP))
                 {
                     newPosx = newPosx + 2;
-                } else if (choice.equals("l"))
+                } else if (choice == (KeyEvent.VK_LEFT))
                 {
                     newPosy = newPosy + 2;
                 } else
@@ -237,11 +235,11 @@ public class Chamber {
                 {
                     burned = false;
                     while (outOfBounds(newPosx, newPosy) || room[newPosx][newPosy] instanceof WallMapElement) {
-                        if (choice.equals("d")) {
+                        if (choice == (KeyEvent.VK_DOWN)) {
                             newPosx++;
-                        } else if (choice.equals("u")) {
+                        } else if (choice == (KeyEvent.VK_UP)) {
                             newPosx--;
-                        } else if (choice.equals("l")) {
+                        } else if (choice == (KeyEvent.VK_LEFT)) {
                             newPosy--;
                         } else {
                             newPosy++;

@@ -7,14 +7,15 @@ public class Item extends MapElement{
     /**
      * Initiates an item object
      *
-     * @param name item name
-     * @param uses item uses
-     * @param damage item damage
+     * @param name       item name
+     * @param uses       item uses
+     * @param damage     item damage
      * @param mapDisplay item display on map
+     * @param img
      */
-    public Item (String name, int uses, int damage, String mapDisplay)
+    public Item (String name, int uses, int damage, String mapDisplay, String img)
     {
-        super(name, mapDisplay);
+        super(name, mapDisplay, img);
         this.uses = uses;
         this.damage = damage;
     }
@@ -43,6 +44,8 @@ public class Item extends MapElement{
     public void setUses(int uses) {
         this.uses = uses;
     }
+
+
 
     /** Returns string that contains values of name, uses,
      * and damage instance variables (the item's state)

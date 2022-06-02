@@ -2,6 +2,6 @@ public class EndMapElement extends MapElement{
 
     public EndMapElement()
     {
-        super("end", "E");
+        super("end", "E", );
     }
 }

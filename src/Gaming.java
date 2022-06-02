@@ -9,14 +9,7 @@ public class Gaming {
     private WallMapElement wall = new WallMapElement();
     /** Blank map element for game*/
     private BlankMapElement blank = new BlankMapElement();
-//
-//    /** Hammer item for game*/
-//    private HammerItem hammer = new HammerItem("Hammer", 10, 5);
-//    /** sword item for game*/
-//    private SwordItem sword = new SwordItem("Sword", 15, 3);
-//    /** Extinguisher item for game*/
-//    private ExtiguisherItem extinguisher = new ExtiguisherItem("Extinguisher", 7, 1);
-//
+
     /** player object of game*/
     private Player player;
     /** 1st room of game*/

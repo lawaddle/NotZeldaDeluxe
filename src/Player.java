@@ -25,7 +25,7 @@ public class Player extends MapElement{
      */
     public Player ()
     {
-        super(" ", "\uD83D\uDE10", "src/imgs/lonk.png");
+        super(" ", "\uD83D\uDE10", "src/lonk.png");
         userPickName();
     }
 

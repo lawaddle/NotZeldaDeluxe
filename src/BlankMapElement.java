@@ -2,6 +2,6 @@ public class BlankMapElement extends MapElement{
 
     public BlankMapElement()
     {
-        super("blank", " ", );
+        super("blank", " ", "src/blank.png");
     }
 }

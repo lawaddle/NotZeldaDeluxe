@@ -11,12 +11,16 @@ public class GUI implements KeyListener {
     private JFrame frame;
     private JPanel gameScreen;
     private JPanel menus;
+    private JLabel playerInfo;
+    private JTextArea worldInfo;
+    private JLabel tempMenus;
     private Gaming logic;
     private Player player;
 
     public GUI()
     {
         logic = new Gaming();
+        //logic.play();
         player = logic.getPlayer();
         room1 = new JLabel[logic.getRoom1().length][logic.getRoom1()[0].length];
         room2 = new JLabel[logic.getRoom2().length][logic.getRoom2()[0].length];
@@ -24,7 +28,7 @@ public class GUI implements KeyListener {
         rooms.add(room1);
         rooms.add(room2);
         gameScreen = new JPanel();
-
+        makeFrame();
     }
 
     public void makeFrame()
@@ -43,18 +47,20 @@ public class GUI implements KeyListener {
     public void updateRoom()
     {
         int currRoom = logic.getCurrRoomNum();
+        System.out.println("m" + currRoom);
         if(currRoom == 1) {
-            room1 = new JLabel[logic.getCurrChamber().length][logic.getCurrChamber()[0].length];
             MapElement[][] room = logic.getCurrChamber();
+            System.out.println("a" + room.length);
             for (int i = 0; i < logic.getCurrChamber().length; i++) {
                 for (int j = 0; j < logic.getCurrChamber()[0].length; j++) {
+
                     room1[i][j] = new JLabel(setSize(room[i][j].getImg()));
+                    System.out.println(room1[i][j]);
                 }
             }
         }
         if(currRoom == 2)
         {
-            room2 = new JLabel[logic.getCurrChamber().length][logic.getCurrChamber()[0].length];
             MapElement[][] room = logic.getCurrChamber();
             for (int i = 0; i < logic.getCurrChamber().length; i++) {
                 for (int j = 0; j < logic.getCurrChamber()[0].length; j++) {
@@ -67,9 +73,12 @@ public class GUI implements KeyListener {
     public void updateGameScreen()
     {
         updateRoom();
-        int curRoom = logic.getCurrRoomNum();
+        int curRoom = logic.getCurrRoomNum() -1;
         for (int i = 0; i < rooms.get(curRoom).length; i++) {
             for (int j = 0; j < rooms.get(curRoom)[0].length; j++) {
+                JLabel[][] room = rooms.get(curRoom);
+                System.out.println(room);
+                System.out.println(rooms.get(curRoom)[i][j]);
                 gameScreen.add(rooms.get(curRoom)[i][j]);
             }
         }

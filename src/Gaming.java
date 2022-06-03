@@ -13,12 +13,12 @@ public class Gaming {
     /** player object of game*/
     private Player player;
     /** 1st room of game*/
-    private MapElement[][] room2;
+    private MapElement[][] room2 = new MapElement[8][8];
     /** 2nd room of game*/
-    private MapElement[][] room1;
-    private int currRoom;
-    private ArrayList<Chamber> chambers;
-    private ArrayList<MapElement[][]> rooms;
+    private MapElement[][] room1 = new MapElement[5][5];
+    private int currRoom = 1;
+    private ArrayList<Chamber> chambers= new ArrayList<>();
+    private ArrayList<MapElement[][]> rooms = new ArrayList<>();
 
 
     /** Initializes Gaming object
@@ -26,8 +26,8 @@ public class Gaming {
      */
     public Gaming()
     {
-        chambers = new ArrayList<>();
-        currRoom = 1;
+
+
         player = new Player();
         makeRoom1();
         makeRoom2();
@@ -76,7 +76,6 @@ public class Gaming {
      */
     public void makeRoom2()
     {
-        room2 = new MapElement[8][8];
         room2[0][2] = hole;
         room2[0][6] = fire;
         room2[0][7] = new SwordItem("Sword", 15, 3);
@@ -110,7 +109,7 @@ public class Gaming {
      */
     public void makeRoom1()
     {
-        room1 = new MapElement[5][5];
+
         room1[1][1] = wall;
         room1[0][3] = fire;
         room1[0][2] = fire;
@@ -155,6 +154,7 @@ public class Gaming {
 
 
     public void setChamberInput(int input) {
+        System.out.println(currRoom-1);
         chambers.get(currRoom-1).setInput(input);
     }
 }

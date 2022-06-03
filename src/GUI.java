@@ -16,14 +16,14 @@ public class GUI implements KeyListener {
 
     public GUI()
     {
-        rooms = new ArrayList<>();
-        rooms.add(room1);
-        rooms.add(room2);
-        gameScreen = new JPanel();
         logic = new Gaming();
         player = logic.getPlayer();
         room1 = new JLabel[logic.getRoom1().length][logic.getRoom1()[0].length];
         room2 = new JLabel[logic.getRoom2().length][logic.getRoom2()[0].length];
+        rooms = new ArrayList<>();
+        rooms.add(room1);
+        rooms.add(room2);
+        gameScreen = new JPanel();
 
     }
 
@@ -48,7 +48,7 @@ public class GUI implements KeyListener {
             MapElement[][] room = logic.getCurrChamber();
             for (int i = 0; i < logic.getCurrChamber().length; i++) {
                 for (int j = 0; j < logic.getCurrChamber()[0].length; j++) {
-                    room1[i][j] = new JLabel(new ImageIcon("src//placeholder.jpg"))
+                    room1[i][j] = new JLabel(setSize(room[i][j].getImg()));
                 }
             }
         }
@@ -58,7 +58,7 @@ public class GUI implements KeyListener {
             MapElement[][] room = logic.getCurrChamber();
             for (int i = 0; i < logic.getCurrChamber().length; i++) {
                 for (int j = 0; j < logic.getCurrChamber()[0].length; j++) {
-                    room2[i][j] = new JLabel(new ImageIcon("src//placeholder.jpg"))
+                    room2[i][j] = new JLabel(setSize(room[i][j].getImg()));
                 }
             }
         }
@@ -85,6 +85,14 @@ public class GUI implements KeyListener {
     public void showStats()
     {
 
+    }
+
+    public ImageIcon setSize(String str)
+    {
+        ImageIcon img = new ImageIcon(str);
+        Image imgData = img.getImage();
+        Image scaled = imgData.getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH);
+        return new ImageIcon(scaled);
     }
 
 

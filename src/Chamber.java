@@ -42,6 +42,7 @@ public class Chamber {
         playerPosx = startx;
         playerPosy = starty;
         room[startx][starty] = player;
+        room[endx][endy] = new EndMapElement();
 
     }
 
@@ -56,7 +57,7 @@ public class Chamber {
         while (ah)
         {
             printRoom();
-            showPlayerInfo();
+            //showPlayerInfo();
             movePlayer();
             if(player.isDead())
             {
@@ -159,19 +160,12 @@ public class Chamber {
     public void movePlayer()
     {
 
-        boolean lop = true;
+        //boolean lop = true;
         int choice = input;
-        while (lop) {
-            System.out.println("Where do you want to move? \n(U)p \n(D)own \n(L)eft \n(R)ight");
-            if(choice == (KeyEvent.VK_UP) || choice == (KeyEvent.VK_DOWN) || choice == (KeyEvent.VK_RIGHT) || choice == (KeyEvent.VK_LEFT))
-            {
-                lop = false;
+        while (input == KeyEvent.VK_UNDEFINED) {
 
-            } else
-            {
-                System.out.println("Invaild Option. Please pick again.");
-            }
         }
+        choice = input;
         int oldPosx = playerPosx;
         int oldPosy = playerPosy;
         int newPosx = playerPosx;
@@ -526,6 +520,10 @@ public class Chamber {
 
 
         return burn;
+    }
+
+    public MapElement[][] getRoom() {
+        return room;
     }
 
     public int getInput()

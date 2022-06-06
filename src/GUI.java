@@ -20,7 +20,6 @@ public class GUI implements KeyListener {
     public GUI()
     {
         logic = new Gaming();
-        //logic.play();
         player = logic.getPlayer();
         room1 = new JLabel[logic.getRoom1().length][logic.getRoom1()[0].length];
         room2 = new JLabel[logic.getRoom2().length][logic.getRoom2()[0].length];
@@ -29,6 +28,7 @@ public class GUI implements KeyListener {
         rooms.add(room2);
         gameScreen = new JPanel();
         makeFrame();
+        logic.play();
     }
 
     public void makeFrame()
@@ -100,7 +100,7 @@ public class GUI implements KeyListener {
     {
         ImageIcon img = new ImageIcon(str);
         Image imgData = img.getImage();
-        Image scaled = imgData.getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH);
+        Image scaled = imgData.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH);
         return new ImageIcon(scaled);
     }
 
@@ -119,7 +119,7 @@ public class GUI implements KeyListener {
     public void keyReleased(KeyEvent e) {
         //if s pressed then show player stats
         logic.setChamberInput(e.getKeyCode());
-        updateRoom();
+        updateGameScreen();
 
     }
 }

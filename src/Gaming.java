@@ -33,7 +33,10 @@ public class Gaming {
         makeRoom2();
         rooms.add(room1);
         rooms.add(room2);
-
+        Chamber chamber1 = new Chamber(room1, 0, 0, 3, 3, player);
+        Chamber chamber2 = new Chamber(room2, 0, 0, 4,7, player);
+        chambers.add(chamber1);
+        chambers.add(chamber2);
     }
 
     public Player getPlayer() {
@@ -45,10 +48,7 @@ public class Gaming {
      */
     public void play()
     {
-        Chamber chamber1 = new Chamber(room1, 0, 0, 3, 3, player);
-        Chamber chamber2 = new Chamber(room2, 0, 0, 4,7, player);
-        chambers.add(chamber1);
-        chambers.add(chamber2);
+
         System.out.println("Game Start");
         for (int i = 1; i <= chambers.size(); i++) {
             if(!(player.isDead()))
@@ -60,14 +60,14 @@ public class Gaming {
             }
         }
 
-        System.out.println("Room 1 Start");
-        currRoom =1;
-        chamber1.game();
-        if(!(player.isDead())) {
-            System.out.println("Room 2 Start");
-            currRoom = 2;
-            chamber2.game();
-        }
+//        System.out.println("Room 1 Start");
+//        currRoom =1;
+//        chamber1.game();
+//        if(!(player.isDead())) {
+//            System.out.println("Room 2 Start");
+//            currRoom = 2;
+//            chamber2.game();
+//        }
         System.out.println("Game End");
     }
 
@@ -148,7 +148,7 @@ public class Gaming {
     }
 
     public MapElement[][] getCurrChamber(){
-        return (rooms.get(currRoom-1));
+        return (chambers.get(currRoom-1).getRoom());
     }
 
 

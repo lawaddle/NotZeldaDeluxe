@@ -10,6 +10,8 @@ public class GUI implements KeyListener {
     private GridLayout layout;
     private JFrame frame;
     private JPanel gameScreen;
+    private JPanel topSide;
+    private JPanel bottomSide;
     private JPanel menus;
     private JLabel playerInfo;
     private JTextArea worldInfo;
@@ -26,7 +28,12 @@ public class GUI implements KeyListener {
         rooms = new ArrayList<>();
         rooms.add(room1);
         rooms.add(room2);
+        topSide = new JPanel();
         gameScreen = new JPanel();
+        menus = new JPanel();
+        worldInfo = new JTextArea(10,10);
+
+
         makeFrame();
         logic.play();
     }
@@ -34,13 +41,20 @@ public class GUI implements KeyListener {
     public void makeFrame()
     {
         frame = new JFrame("Nintendo don't sue me");
+        frame.setPreferredSize(new Dimension(1000,1000));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.addKeyListener(this);
         updateGameScreen();
-        frame.add(gameScreen, BorderLayout.NORTH);
+        topSide.add(gameScreen);
+        frame.add(topSide, BorderLayout.NORTH);
 
         frame.pack();
         frame.setVisible(true);
+
+    }
+
+    public void updateMenus()
+    {
 
     }
 
@@ -73,22 +87,35 @@ public class GUI implements KeyListener {
 
     public void updateGameScreen()
     {
-        updateRoom();
-        int curRoom = logic.getCurrRoomNum() -1;
         gameScreen.removeAll();
-        for (int i = 0; i < rooms.get(curRoom).length; i++) {
-            for (int j = 0; j < rooms.get(curRoom)[0].length; j++) {
-                JLabel[][] room = rooms.get(curRoom);
-                //System.out.println(room);
-                //System.out.println(rooms.get(curRoom)[i][j]);
+        if(!logic.isAllRoomClear()) {
+            updateRoom();
+            int curRoom = logic.getCurrRoomNum() - 1;
 
-                gameScreen.add(room[i][j]);
+            for (int i = 0; i < rooms.get(curRoom).length; i++) {
+                for (int j = 0; j < rooms.get(curRoom)[0].length; j++) {
+                    JLabel[][] room = rooms.get(curRoom);
+                    //System.out.println(room);
+                    //System.out.println(rooms.get(curRoom)[i][j]);
+
+                    gameScreen.add(room[i][j]);
+                }
             }
+
+            layout = new GridLayout(logic.getCurrChamber().length, logic.getCurrChamber()[0].length);
+            layout.setHgap(5);  // horizontal spacing between images
+            layout.setVgap(10);  // vertical spacing between images
+            gameScreen.setLayout(layout);
+            //gameScreen.setPreferredSize(new Dimension(200,600));
+            float[] HSB = new float[3];
+            Color.RGBtoHSB(147,194,159, HSB);
+            topSide.setBackground(Color.getHSBColor(HSB[0],HSB[1],HSB[2]));
+        } else
+        {
+            JLabel gameEnd = new JLabel("Game End");
+            gameScreen.removeAll();
+            gameScreen.add(gameEnd);
         }
-        layout = new GridLayout(logic.getCurrChamber().length, logic.getCurrChamber()[0].length);
-        layout.setHgap(5);  // horizontal spacing between images
-        layout.setVgap(10);  // vertical spacing between images
-        gameScreen.setLayout(layout);
         frame.pack();
 
     }
@@ -124,6 +151,10 @@ public class GUI implements KeyListener {
         System.out.println(e.getKeyCode());
         logic.setChamberInput(e.getKeyCode());
         logic.getChamber().game();
+        if(logic.isCurrRoomClear())
+        {
+            logic.setCurrRoomNum(logic.getCurrRoomNum()+1);
+        }
         updateGameScreen();
 
 

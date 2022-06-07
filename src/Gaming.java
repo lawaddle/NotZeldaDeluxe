@@ -52,9 +52,11 @@ public class Gaming {
         System.out.println("Game Start");
         for (int i = 1; i <= chambers.size(); i++) {
             Chamber currChamber = chambers.get(currRoom-1);
+
             while((player.getLifeCount() > 0) && !currChamber.isCleared())
             {
                 //System.out.println("Room " + i + " Start");
+
                 currRoom = i;
 
                 //currChamber.game();
@@ -148,12 +150,33 @@ public class Gaming {
         return currRoom;
     }
 
+    public void setCurrRoomNum(int newNum)
+    {
+        currRoom = newNum;
+    }
+
     public MapElement[][] getCurrChamber(){
         return (chambers.get(currRoom-1).getRoom());
     }
 
     public Chamber getChamber(){
         return chambers.get(currRoom-1);
+    }
+
+    public boolean isCurrRoomClear()
+    {
+        return chambers.get(currRoom-1).isCleared();
+    }
+
+    public boolean isAllRoomClear()
+    {
+        for (Chamber chamber: chambers) {
+            if(!chamber.isCleared())
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
 

@@ -20,6 +20,7 @@ public class Chamber {
     private int playerPosy;
     /** Player object*/
     private Player player;
+    private boolean cleared = false;
     private int input = KeyEvent.VK_UNDEFINED;
 
     /** Initializes chamber object
@@ -53,12 +54,11 @@ public class Chamber {
      */
     public void game()
     {
-        boolean ah = true;
-        while (ah)
-        {
-            printRoom();
+
+
             //showPlayerInfo();
             movePlayer();
+            printRoom();
             if(player.isDead())
             {
                 System.out.println("You died");
@@ -67,23 +67,24 @@ public class Chamber {
             }
             if(player.getLifeCount() <= 0)
             {
-                ah = false;
                 System.out.println("Game Over");
             }
             if(room[endx][endy] instanceof Player)
             {
                 if(noMoreItems())
                 {
-                    ah = false;
+                    cleared = true;
+
                     System.out.println("Room Complete");
                 } else
                 {
                     System.out.println("You still have items to get.");
                 }
             }
+        System.out.println("data updated");
 
         }
-    }
+
 
     /**
      * Gives user option to show player info and shows player info
@@ -159,12 +160,12 @@ public class Chamber {
      */
     public void movePlayer()
     {
-
+        System.out.println(input);
         //boolean lop = true;
         int choice = input;
-        while (input == KeyEvent.VK_UNDEFINED) {
-
-        }
+//        while (input == KeyEvent.VK_UNDEFINED) {
+//
+//        }
         choice = input;
         int oldPosx = playerPosx;
         int oldPosy = playerPosy;
@@ -533,5 +534,9 @@ public class Chamber {
 
     public void setInput(int input) {
         this.input = input;
+    }
+
+    public boolean isCleared() {
+        return cleared;
     }
 }

@@ -47,15 +47,16 @@ public class GUI implements KeyListener {
     public void updateRoom()
     {
         int currRoom = logic.getCurrRoomNum();
-        System.out.println("m" + currRoom);
+        System.out.println(currRoom);
+        //System.out.println("m" + currRoom);
         if(currRoom == 1) {
             MapElement[][] room = logic.getCurrChamber();
-            System.out.println("a" + room.length);
+            //System.out.println("a" + room.length);
             for (int i = 0; i < logic.getCurrChamber().length; i++) {
                 for (int j = 0; j < logic.getCurrChamber()[0].length; j++) {
 
                     room1[i][j] = new JLabel(setSize(room[i][j].getImg()));
-                    System.out.println(room1[i][j]);
+                    //System.out.println(room1[i][j]);
                 }
             }
         }
@@ -74,19 +75,21 @@ public class GUI implements KeyListener {
     {
         updateRoom();
         int curRoom = logic.getCurrRoomNum() -1;
+        gameScreen.removeAll();
         for (int i = 0; i < rooms.get(curRoom).length; i++) {
             for (int j = 0; j < rooms.get(curRoom)[0].length; j++) {
                 JLabel[][] room = rooms.get(curRoom);
-                System.out.println(room);
-                System.out.println(rooms.get(curRoom)[i][j]);
-                gameScreen.add(rooms.get(curRoom)[i][j]);
+                //System.out.println(room);
+                //System.out.println(rooms.get(curRoom)[i][j]);
+
+                gameScreen.add(room[i][j]);
             }
         }
         layout = new GridLayout(logic.getCurrChamber().length, logic.getCurrChamber()[0].length);
         layout.setHgap(5);  // horizontal spacing between images
         layout.setVgap(10);  // vertical spacing between images
         gameScreen.setLayout(layout);
-
+        frame.pack();
 
     }
 
@@ -118,8 +121,11 @@ public class GUI implements KeyListener {
     @Override
     public void keyReleased(KeyEvent e) {
         //if s pressed then show player stats
+        System.out.println(e.getKeyCode());
         logic.setChamberInput(e.getKeyCode());
+        logic.getChamber().game();
         updateGameScreen();
+
 
     }
 }

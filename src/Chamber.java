@@ -22,6 +22,11 @@ public class Chamber {
     private Player player;
     private boolean cleared = false;
     private int input = KeyEvent.VK_UNDEFINED;
+    private String message = "";
+    private boolean send;
+    private ArrayList<Object> options = new ArrayList<>();
+    private int selection = -1;
+    private InputFocus focus;
 
     /** Initializes chamber object
      *
@@ -44,6 +49,7 @@ public class Chamber {
         playerPosy = starty;
         room[startx][starty] = player;
         room[endx][endy] = new EndMapElement();
+        focus = InputFocus.GameScreen;
 
     }
 
@@ -57,17 +63,20 @@ public class Chamber {
 
 
             //showPlayerInfo();
+        focus = InputFocus.GameScreen;
             movePlayer();
             printRoom();
             if(player.isDead())
             {
-                System.out.println("You died");
-                System.out.println("You have " + player.getLifeCount() + " lives remaining.") ;
+                message = "You died.";
+                message  = "You have " + player.getLifeCount() + " lives remaining.";
+                send = true;
                 player.setDead(false);
             }
             if(player.getLifeCount() <= 0)
             {
-                System.out.println("Game Over");
+                message = "Game Over.";
+                send = true;
             }
             if(room[endx][endy] instanceof Player)
             {
@@ -75,10 +84,12 @@ public class Chamber {
                 {
                     cleared = true;
 
-                    System.out.println("Room Complete");
+                    message = "Room Complete.";
+                    send = true;
                 } else
                 {
-                    System.out.println("You still have items to get.");
+                    message = "You still have items to get.";
+                    send = true;
                 }
             }
         System.out.println("data updated");
@@ -161,6 +172,7 @@ public class Chamber {
     public void movePlayer()
     {
         System.out.println(input);
+        focus = InputFocus.GameScreen;
         //boolean lop = true;
         int choice = input;
 //        while (input == KeyEvent.VK_UNDEFINED) {
@@ -187,7 +199,8 @@ public class Chamber {
         //if movement, change previous player location to blank
         if (outOfBounds(newPosx, newPosy))
         {
-            System.out.println("Nope, you don't get to go out of bounds.");
+            message = "Nope, you don't get to go out of bounds.";
+            send = true;
         } else if(room[newPosx][newPosy] instanceof WallMapElement)
         {
             //if hammer in inventory, ask to break though walls, stand in place where wall was
@@ -201,18 +214,23 @@ public class Chamber {
             //change wallElement to blank
             //ask player to move
             //if player doesn't move, doesn't break wall, or doesn't have hammer player stays still
-            System.out.println("There is a wall in your way.");
+            message = "There is a wall in your way.";
+            send = true;
+            focus = InputFocus.Menus;
             wallMovement(oldPosx, oldPosy, newPosx, newPosy);
         } else if(room[newPosx][newPosy] instanceof FireMapElement)
         {
             //if extinguisher in inventory, ask to use to extinguish fire, and move to place where fire was
             //otherwise move back 2
-            System.out.println("There is fire in your way.");
+            message = "There is fire in your way.";
+            send = true;
+            focus = InputFocus.Menus;
             boolean burned = fireMovement(oldPosx, oldPosy, newPosx, newPosy);
             while(burned)
             {
                 player.setHp(player.getHp()-3);
-                System.out.println("You got burned");
+                message = "You got burned.";
+                send = true;
                 if(choice == (KeyEvent.VK_DOWN))
                 {
                     newPosx = newPosx - 2;
@@ -272,6 +290,7 @@ public class Chamber {
         {
             playerMove(oldPosx, oldPosy, newPosx, newPosy);
         }
+        focus = InputFocus.GameScreen;
 
     }
 
@@ -285,7 +304,9 @@ public class Chamber {
         player.setLifeCount(player.getLifeCount() - 1);
         makeSpaceBlank(oldPosx, oldPosy);
         playerMove(oldPosx, oldPosy, startx, starty);
-        System.out.println("You fell down a hole and lost a life");
+        message = "You fell down a hole and lost a life.";
+        message  += " You have " + player.getLifeCount() + " lives remaining.";
+        send = true;
     }
 
     /** picks up item and moves player to space where item was
@@ -300,7 +321,8 @@ public class Chamber {
         Item item = (Item) room[newPosx][newPosy];
         player.addItemToInven(item);
         playerMove(oldPosx, oldPosy, newPosx, newPosy);
-        System.out.println("You picked up an " + item.getName());
+        message = "You picked up a(n) " + item.getName() + ".";
+        send = true;
     }
 
     /** checks if new player position is out of bounds
@@ -355,77 +377,88 @@ public class Chamber {
         ArrayList<HammerItem> hammersInInven = player.hammersInInven();
         if(hammersInInven.size() != 0)
         {
-            String ans = "";
-            boolean spin = true;
-            while (spin) {
-                System.out.print("Do you want to break this wall? (Y)es or (N)o");
-                ans = sc.nextLine();
-                if(ans.length()>0) {
-                    ans = ans.substring(0, 1).toLowerCase();
-                }
-                if(ans.equals("y") || ans.equals("n"))
-                {
-                    spin = false;
-                } else
-                {
-                    System.out.println("Not a valid answer.");
-                }
-            }
-            if(ans.equals("y"))
+            int YorN = -1;
+            options.add("Yes");
+            options.add("No");
+//            while (spin) {
+//                System.out.print("Do you want to break this wall? (Y)es or (N)o");
+//                YorN = sc.nextLine();
+//                if(YorN.length()>0) {
+//                    YorN = YorN.substring(0, 1).toLowerCase();
+//                }
+//                if(YorN.equals("y") || YorN.equals("n"))
+//                {
+//                    spin = false;
+//                } else
+//                {
+//                    System.out.println("Not a valid answer.");
+//                }
+//            }
+            focus = InputFocus.SelectionMenu;
+            System.out.println(YorN);
+            System.out.println(focus);
+            while (YorN == -1)
             {
-                spin = true;
+                focus = InputFocus.SelectionMenu;
+                YorN = selection;
             }
-            int anss = -1;
-            while (spin) {
-                System.out.println("Choose which hammer you want to use");
-                Player.printHammers(hammersInInven);
-                String temp = sc.nextLine();
-                anss = Integer.parseInt(temp);
-                anss--;
-                if (anss >= 0 && anss < hammersInInven.size()) {
-                    spin = false;
-                } else
+
+            focus = InputFocus.Menus;
+            int itemPick = -1;
+            if(YorN == 0){
+                options.clear();
+                message = "Choose which hammer you want to use.";
+                send = true;
+                for (HammerItem hammer: hammersInInven) {
+                    options.add(hammer);
+                }
+                while (itemPick == -1)
                 {
-                    System.out.println("Not a hammer number.");
+                    focus = InputFocus.SelectionMenu;
+                    itemPick = selection;
                 }
             }
-            if(anss != -1)
+            options.clear();
+            focus = InputFocus.Menus;
+            if(itemPick != -1)
             {
                 room[newPosx][newPosy] = new BlankMapElement();
-                hammersInInven.get(anss).setUses(hammersInInven.get(anss).getUses()-1);
-                if(hammersInInven.get(anss).getUses() <= 0)
+                hammersInInven.get(itemPick).setUses(hammersInInven.get(itemPick).getUses()-1);
+                if(hammersInInven.get(itemPick).getUses() <= 0)
                 {
-                    player.removeItemFromInven(hammersInInven.get(anss));
-                    System.out.println("This hammer ran out of uses.");
+                    player.removeItemFromInven(hammersInInven.get(itemPick));
+                    message = "This hammer ran out of uses.";
+                    send = true;
                 }
-                System.out.println("You broke the wall!");
-                spin = true;
-                ans = "";
-                while (spin)
+                message = "You broke the wall!";
+                send = true;
+                YorN = -1;
+                options.add("Yes");
+                options.add("No");
+                System.out.println("Do you want to move? (Y)es or (N)o");
+                while (YorN == -1)
                 {
-                    System.out.println("Do you want to move? (Y)es or (N)o");
-                    ans = sc.nextLine();
-                    if(ans.length()>0) {
-                        ans = ans.substring(0, 1).toLowerCase();
-                    }
-                    if(ans.equals("y") || ans.equals("n"))
-                    {
-                        if(ans.equals("y"))
+
+                    focus = InputFocus.SelectionMenu;
+                    YorN = selection;
+
+                        if(YorN == 0)
                         {
                             stayStill = false;
                         }
-                        spin = false;
-                    }
+
                 }
             }
         } else
         {
-            System.out.println("You have no hammers to break this wall.");
+            message = "You have no hammers to break this wall.";
+            send = true;
         }
         if(!stayStill)
         {
             playerMove(oldPosx, oldPosy, newPosx, newPosy);
         }
+        options.clear();
     }
 
     /** If space player is moving has fire
@@ -445,80 +478,85 @@ public class Chamber {
         ArrayList<ExtiguisherItem> extiguishersInInven = player.extiguishersInInven();
         if(extiguishersInInven.size() != 0)
         {
-            String ans = "";
-            boolean spin = true;
-            while (spin) {
-                System.out.print("Do you want to remove the fire? (Y)es or (N)o");
-                ans = sc.nextLine();
-                if(ans.length()>0) {
-                    ans = ans.substring(0, 1).toLowerCase();
-                }
-                if(ans.equals("y") || ans.equals("n"))
-                {
-                    spin = false;
-
-                }
-                else
-                {
-                    System.out.println("Not a valid answer.");
-                }
-            }
-            if(ans.equals("y"))
+            int YorN = -1;
+            options.add("Yes");
+            options.add("No");
+//            while (spin) {
+//                System.out.println("Do you want to remove the fire? (Y)es or (N)o");
+//                YorN = sc.nextLine();
+//                if(YorN.length()>0) {
+//                    YorN = YorN.substring(0, 1).toLowerCase();
+//                }
+//                if(YorN.equals("y") || YorN.equals("n"))
+//                {
+//                    spin = false;
+//
+//                }
+//                else
+//                {
+//                    System.out.println("Not a valid answer.");
+//                }
+//            }
+            while (YorN == -1)
             {
-                spin = true;
+                focus = InputFocus.SelectionMenu;
+                YorN = selection;
             }
-            int anss = -1;
-            while (spin)
-            {
-                System.out.println("Choose which extinguisher you want to use");
-                Player.printExtgusihers(extiguishersInInven);
-                String temp = sc.nextLine();
-                anss = Integer.parseInt(temp);
-                anss--;
-                if(anss >= 0 && anss < extiguishersInInven.size())
+            focus = InputFocus.Menus;
+            int itemPick = -1;
+            if(YorN == 0){
+                options.clear();
+                message = "Choose which hammer you want to use.";
+                send = true;
+                for (ExtiguisherItem extiguisher: extiguishersInInven) {
+                    options.add(extiguisher);
+                }
+                while (itemPick == -1)
                 {
-                    spin = false;
-                } else
-                {
-                    System.out.println("Not an extinguisher number.");
+                    focus = InputFocus.SelectionMenu;
+                    itemPick = selection;
                 }
             }
-            if(anss != -1)
+            options.clear();
+            focus = InputFocus.Menus;
+            if(itemPick != -1)
             {
                 room[newPosx][newPosy] = new BlankMapElement();
-                extiguishersInInven.get(anss).setUses(extiguishersInInven.get(anss).getUses()-1);
-                if(extiguishersInInven.get(anss).getUses() <= 0)
+                extiguishersInInven.get(itemPick).setUses(extiguishersInInven.get(itemPick).getUses()-1);
+                if(extiguishersInInven.get(itemPick).getUses() <= 0)
                 {
-                    player.removeItemFromInven(extiguishersInInven.get(anss));
-                    System.out.println("This extinguisher ran out of uses.");
+                    player.removeItemFromInven(extiguishersInInven.get(itemPick));
+                    message = "This extinguisher ran out of uses.";
+                    send = true;
                 }
-                System.out.println("You removed the fire!");
+                message = "You removed the fire!";
+                send = true;
                 burn = false;
-                spin = true;
-                ans = "";
-                while (spin)
+                YorN = -1;
+                options.add("Yes");
+                options.add("No");
+                System.out.println("Do you want to move? (Y)es or (N)o");
+                while (YorN == -1)
                 {
-                    System.out.println("Do you want to move? (Y)es or (N)o");
-                    ans = sc.nextLine();
-                    if(ans.length()>0) {
-                        ans = ans.substring(0, 1).toLowerCase();
-                    }
-                    if(ans.equals("y") || ans.equals("n"))
+                    focus = InputFocus.SelectionMenu;
+                    YorN = selection;
+
+                    if(YorN == 0)
                     {
-                        if(ans.equals("y"))
-                        {
-                            stayStill = false;
-                        }
-                        spin = false;
+                        stayStill = false;
                     }
+
                 }
             }
-            if(!stayStill)
-            {
-                playerMove(oldPosx, oldPosy, newPosx, newPosy);
-            }
+        } else{
+            message = "You have no extinguishers to put out this fire";
+            send = true;
         }
-
+        if(!stayStill)
+        {
+            playerMove(oldPosx, oldPosy, newPosx, newPosy);
+        }
+        options.clear();
 
         return burn;
     }
@@ -538,5 +576,38 @@ public class Chamber {
 
     public boolean isCleared() {
         return cleared;
+    }
+
+    public String sendMessage()
+    {
+        return message;
+    }
+
+    public boolean isSend()
+    {
+        return send;
+    }
+
+    public void setSend(boolean send)
+    {
+        this.send = send;
+    }
+
+    public void setSelection(int selection)
+    {
+        this.selection = selection;
+    }
+
+    public ArrayList<Object> getOptions()
+    {
+        return options;
+    }
+
+    public void setFocus(InputFocus focus) {
+        this.focus = focus;
+    }
+
+    public InputFocus getFocus() {
+        return focus;
     }
 }

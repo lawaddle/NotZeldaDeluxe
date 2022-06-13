@@ -52,10 +52,10 @@ public class Gaming {
         System.out.println("Game Start");
         for (int i = 1; i <= chambers.size(); i++) {
             Chamber currChamber = chambers.get(currRoom-1);
-
+            System.out.println("Room " + i + " Start");
             while((player.getLifeCount() > 0) && !currChamber.isCleared())
             {
-                //System.out.println("Room " + i + " Start");
+
 
                 currRoom = i;
 

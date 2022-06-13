@@ -2,6 +2,6 @@ public class FireMapElement extends MapElement{
 
     public FireMapElement()
     {
-        super("fire", "\uD83D\uDD25", "src/fire.png");
+        super("fire", "\uD83D\uDD25", "src/imgs/fire.png");
     }
 }

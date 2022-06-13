@@ -2,6 +2,6 @@ public class StartMapElement extends MapElement{
 
     public StartMapElement()
     {
-        super("start", "S", "src/start.png");
+        super("start", "S", "src/imgs/start.png");
     }
 }

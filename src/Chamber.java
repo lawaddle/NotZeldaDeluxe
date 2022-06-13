@@ -483,7 +483,6 @@ public class Chamber {
 //                    System.out.println("Not a valid answer.");
 //                }
 //            }
-            u=
                 focus = InputFocus.SelectionMenu;
                 YorN = selection;
 

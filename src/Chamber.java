@@ -380,20 +380,6 @@ public class Chamber {
             int YorN = -1;
             options.add("Yes");
             options.add("No");
-//            while (spin) {
-//                System.out.print("Do you want to break this wall? (Y)es or (N)o");
-//                YorN = sc.nextLine();
-//                if(YorN.length()>0) {
-//                    YorN = YorN.substring(0, 1).toLowerCase();
-//                }
-//                if(YorN.equals("y") || YorN.equals("n"))
-//                {
-//                    spin = false;
-//                } else
-//                {
-//                    System.out.println("Not a valid answer.");
-//                }
-//            }
             focus = InputFocus.SelectionMenu;
             System.out.println(YorN);
             System.out.println(focus);
@@ -497,16 +483,15 @@ public class Chamber {
 //                    System.out.println("Not a valid answer.");
 //                }
 //            }
-            while (YorN == -1)
-            {
+            u=
                 focus = InputFocus.SelectionMenu;
                 YorN = selection;
-            }
+
             focus = InputFocus.Menus;
             int itemPick = -1;
             if(YorN == 0){
                 options.clear();
-                message = "Choose which hammer you want to use.";
+                message = "Choose which extinguisher you want to use.";
                 send = true;
                 for (ExtiguisherItem extiguisher: extiguishersInInven) {
                     options.add(extiguisher);

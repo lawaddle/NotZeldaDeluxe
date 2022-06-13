@@ -43,7 +43,7 @@ public class test {
 
 
         Chamber chamber = new Chamber(room, 0, 0, 3,3, player);
-        chamber.game();
+        //chamber.game();
 
     }
 }

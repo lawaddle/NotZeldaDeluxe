@@ -27,6 +27,7 @@ public class GUI implements KeyListener {
     private String worldText = "";
     private ArrayList<JLabel> tempMenuOptions;
     private int currOption = 0;
+    private int selection = KeyEvent.VK_UNDEFINED;
 
     private JPanel active;
 
@@ -74,6 +75,7 @@ public class GUI implements KeyListener {
         menus.add(tempMenus, BorderLayout.EAST);
         bottomSide.add(menus);
         frame.add(bottomSide, BorderLayout.SOUTH);
+
 
         frame.pack();
         frame.setVisible(true);
@@ -235,7 +237,7 @@ public class GUI implements KeyListener {
             Color.RGBtoHSB(147, 194, 212, HSB);
             tempMenus.setBackground(Color.getHSBColor(HSB[0], HSB[1], HSB[2]));
             for (JLabel option : tempMenuOptions) {
-                option.remove((Component) option.getBorder());
+                option.setBorder(BorderFactory.createLineBorder(Color.green, 0));
             }
             tempMenuOptions.get(currOption).setBorder(BorderFactory.createLineBorder(Color.green, 5));
             frame.pack();
@@ -323,6 +325,30 @@ public class GUI implements KeyListener {
         return new ImageIcon(scaled);
     }
 
+    public void subMenuMovement()
+    {
+        updateMenus();
+        if(selection == KeyEvent.VK_UP)
+        {
+            currOption++;
+            if(currOption >= tempMenuOptions.size())
+            {
+                currOption = tempMenuOptions.size()-1;
+            }
+            selectionTempMenu();
+        } else if (selection == KeyEvent.VK_DOWN) {
+            currOption--;
+            if(currOption < 0)
+            {
+                currOption = 0;
+            }
+            selectionTempMenu();
+        } else if (selection == KeyEvent.VK_ENTER)
+        {
+            logic.getChamber().setSelection(currOption);
+        }
+    }
+
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -337,28 +363,12 @@ public class GUI implements KeyListener {
     @Override
     public void keyReleased(KeyEvent e) {
         //if s pressed then show player stats
-        System.out.println("hi");
+        //System.out.println("hi");
         if(logic.getChamber().getFocus() == InputFocus.SelectionMenu)
         {
-            if(e.getKeyCode() == KeyEvent.VK_UP)
-            {
-                currOption++;
-                if(currOption >= tempMenuOptions.size())
-                {
-                    currOption = tempMenuOptions.size()-1;
-                }
-                selectionTempMenu();
-            } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-                currOption--;
-                if(currOption < 0)
-                {
-                    currOption = 0;
-                }
-                selectionTempMenu();
-            } else if (e.getKeyCode() == KeyEvent.VK_ENTER)
-            {
-                logic.getChamber().setSelection(currOption);
-            }
+            updateMenus();
+            selection = e.getKeyCode();
+            subMenuMovement();
         } else if(logic.getChamber().getFocus() == InputFocus.GameScreen)
         {
             System.out.println(e.getKeyCode());

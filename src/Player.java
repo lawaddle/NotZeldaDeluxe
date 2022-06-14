@@ -179,10 +179,10 @@ public class Player extends MapElement{
     @Override
     public String toString() {
         String str = super.toString();
-        str+= "\nAttack: " + atk + " Defense: " +  def + " HP: " + hp;
-        str+= "\nInventory: \n";
+        str+= ",Attack: " + atk + " Defense: " +  def + " HP: " + hp;
+        str+= ",Inventory: ,";
         for (Item item: inventory) {
-            str += item + "\n";
+            str += item + ",";
         }
         if(inventory.size() <= 0)
         {

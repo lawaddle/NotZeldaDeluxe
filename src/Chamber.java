@@ -27,6 +27,12 @@ public class Chamber {
     private ArrayList<Object> options = new ArrayList<>();
     private int selection = -1;
     private InputFocus focus;
+    private SubMenuSelection sms;
+    private int oldPosx = playerPosx;
+    private int oldPosy = playerPosy;
+    private int newPosx = playerPosx;
+    private int newPosy = playerPosy;
+    ArrayList<HammerItem> hammersInInven = null;
 
     /** Initializes chamber object
      *
@@ -58,13 +64,15 @@ public class Chamber {
      * (shows death message, game over message, end of room messages)
      *
      */
-    public void game()
+    public void game(GUI gui)
     {
 
 
             //showPlayerInfo();
         focus = InputFocus.GameScreen;
-            movePlayer();
+        if(input != KeyEvent.VK_P) {
+            movePlayer(gui);
+        }
             printRoom();
             if(player.isDead())
             {
@@ -85,12 +93,11 @@ public class Chamber {
                     cleared = true;
 
                     message = "Room Complete.";
-                    send = true;
                 } else
                 {
                     message = "You still have items to get.";
-                    send = true;
                 }
+                send = true;
             }
         System.out.println("data updated");
 
@@ -169,7 +176,7 @@ public class Chamber {
      * checks if player is touching fire (look at fireMovement method
      *
      */
-    public void movePlayer()
+    public void movePlayer(GUI gui)
     {
         System.out.println(input);
         focus = InputFocus.GameScreen;
@@ -179,10 +186,10 @@ public class Chamber {
 //
 //        }
         choice = input;
-        int oldPosx = playerPosx;
-        int oldPosy = playerPosy;
-        int newPosx = playerPosx;
-        int newPosy = playerPosy;
+        oldPosx = playerPosx;
+        oldPosy = playerPosy;
+        newPosx = playerPosx;
+        newPosy = playerPosy;
         if(choice == (KeyEvent.VK_DOWN))
         {
             newPosx++;
@@ -217,7 +224,7 @@ public class Chamber {
             message = "There is a wall in your way.";
             send = true;
             focus = InputFocus.Menus;
-            wallMovement(oldPosx, oldPosy, newPosx, newPosy);
+            wallMovement(oldPosx, oldPosy, newPosx, newPosy, gui);
         } else if(room[newPosx][newPosy] instanceof FireMapElement)
         {
             //if extinguisher in inventory, ask to use to extinguish fire, and move to place where fire was
@@ -290,7 +297,6 @@ public class Chamber {
         {
             playerMove(oldPosx, oldPosy, newPosx, newPosy);
         }
-        focus = InputFocus.GameScreen;
 
     }
 
@@ -370,82 +376,90 @@ public class Chamber {
      * @param newPosx new possible player x position
      * @param newPosy new possible player y position
      */
-    public void wallMovement(int oldPosx, int oldPosy, int newPosx, int newPosy)
-    {
-
-        boolean stayStill = true;
-        ArrayList<HammerItem> hammersInInven = player.hammersInInven();
-        if(hammersInInven.size() != 0)
-        {
+    public void wallMovement(int oldPosx, int oldPosy, int newPosx, int newPosy, GUI gui) {
+        options.clear();
+        hammersInInven = player.hammersInInven();
+        if (hammersInInven.size() != 0) {
             int YorN = -1;
             options.add("Yes");
             options.add("No");
             focus = InputFocus.SelectionMenu;
-            System.out.println(YorN);
-            System.out.println(focus);
-            while (YorN == -1)
-            {
-                focus = InputFocus.SelectionMenu;
-                YorN = selection;
-            }
 
-            focus = InputFocus.Menus;
-            int itemPick = -1;
-            if(YorN == 0){
-                options.clear();
-                message = "Choose which hammer you want to use.";
-                send = true;
-                for (HammerItem hammer: hammersInInven) {
-                    options.add(hammer);
-                }
-                while (itemPick == -1)
-                {
-                    focus = InputFocus.SelectionMenu;
-                    itemPick = selection;
-                }
-            }
-            options.clear();
-            focus = InputFocus.Menus;
-            if(itemPick != -1)
-            {
-                room[newPosx][newPosy] = new BlankMapElement();
-                hammersInInven.get(itemPick).setUses(hammersInInven.get(itemPick).getUses()-1);
-                if(hammersInInven.get(itemPick).getUses() <= 0)
-                {
-                    player.removeItemFromInven(hammersInInven.get(itemPick));
-                    message = "This hammer ran out of uses.";
-                    send = true;
-                }
-                message = "You broke the wall!";
-                send = true;
-                YorN = -1;
-                options.add("Yes");
-                options.add("No");
-                System.out.println("Do you want to move? (Y)es or (N)o");
-                while (YorN == -1)
-                {
+            sms = SubMenuSelection.YNStart;
+            gui.updateOptionMenu();
 
-                    focus = InputFocus.SelectionMenu;
-                    YorN = selection;
 
-                        if(YorN == 0)
-                        {
-                            stayStill = false;
-                        }
-
-                }
-            }
         } else
         {
             message = "You have no hammers to break this wall.";
             send = true;
         }
-        if(!stayStill)
+    }
+
+    public void subMenYNStartWall(GUI gui) {
+        options.clear();
+        int YorN = selection;
+        focus = InputFocus.Menus;
+        //int itemPick = -1;
+        if (YorN == 0) {
+            options.clear();
+            message = "Choose which hammer you want to use.";
+            send = true;
+            for (HammerItem hammer : hammersInInven) {
+                options.add(hammer);
+            }
+
+            focus = InputFocus.SelectionMenu;
+            sms = SubMenuSelection.ItemPick;
+            gui.updateOptionMenu();
+
+
+        }
+    }
+
+    public void subMenItemPickWall(GUI gui)
+    {
+        int itemPick = selection;
+        options.clear();
+        focus = InputFocus.Menus;
+        if(itemPick != -1)
         {
+            room[newPosx][newPosy] = new BlankMapElement();
+            hammersInInven.get(itemPick).setUses(hammersInInven.get(itemPick).getUses()-1);
+            if(hammersInInven.get(itemPick).getUses() <= 0)
+            {
+                player.removeItemFromInven(hammersInInven.get(itemPick));
+                message = "This hammer ran out of uses.";
+                send = true;
+            }
+            message = "You broke the wall!";
+            send = true;
+            options.add("Yes");
+            options.add("No");
+            System.out.println("Do you want to move? (Y)es or (N)o");
+            focus = InputFocus.SelectionMenu;
+            sms = SubMenuSelection.YNStayStill;
+            gui.updateOptionMenu();
+        }
+
+    }
+
+    public void stayStill() {
+        int YorN = selection;
+        boolean stayStill;
+
+        stayStill = YorN != 0;
+        if (!stayStill) {
             playerMove(oldPosx, oldPosy, newPosx, newPosy);
         }
         options.clear();
     }
+
+
+
+
+
+
 
     /** If space player is moving has fire
      * the player has the choice to remove the fire if they have an extinguisher item in their inventory
@@ -593,5 +607,9 @@ public class Chamber {
 
     public InputFocus getFocus() {
         return focus;
+    }
+
+    public SubMenuSelection getSms() {
+        return sms;
     }
 }

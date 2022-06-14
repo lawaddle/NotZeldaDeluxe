@@ -1,8 +1,8 @@
 public class MapElement {
     /** name of item */
     private String name;
-    /** String of item display on map */
     private String consoleDisplay;
+    /** String of item display on map */
     private String img;
 
     /**

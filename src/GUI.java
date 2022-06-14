@@ -15,6 +15,7 @@ public class GUI implements KeyListener {
 
     private JPanel menus;
     private JPanel playerInfo;
+    private JPanel worldThings;
     private JLabel worldInfo;
     private JPanel tempMenus;
 
@@ -28,6 +29,7 @@ public class GUI implements KeyListener {
     private ArrayList<JLabel> tempMenuOptions;
     private int currOption = 0;
     private int selection = KeyEvent.VK_UNDEFINED;
+    private GridLayout tempMenuLayout = new GridLayout();
 
     private JPanel active;
 
@@ -48,10 +50,13 @@ public class GUI implements KeyListener {
         playerInfo = new JPanel();
         playerInfo.setPreferredSize(new Dimension(275,275));
         worldInfo = new JLabel(worldText);
+        worldThings = new JPanel();
         worldInfo.setPreferredSize(new Dimension(275,275));
         tempMenus = new JPanel();
         tempMenus.setPreferredSize(new Dimension(275,275));
         bottomSide = new JPanel();
+
+        tempMenus.setLayout(tempMenuLayout);
 
         showStats = false;
         worldText = "<html></html>";
@@ -85,7 +90,7 @@ public class GUI implements KeyListener {
     public void updateMenus()
     {
         updateWorldInfo();
-        //updatePlayerMenu();
+        updatePlayerMenu();
         updateTempMenus();
         selectionTempMenu();
 
@@ -95,10 +100,21 @@ public class GUI implements KeyListener {
     public void updatePlayerMenu()
     {
         playerInfo.removeAll();
-        if(!showStats)
-        {
-
+        String stats = player.toString();
+        String str = "<html>";
+        for (int j = 0; j < stats.length(); j++) {
+            int comma = stats.indexOf(",");
+            if(comma < 0)
+            {
+                break;
+            }
+            str += stats.substring(0, comma) + "<br>";
+            stats = stats.substring(comma+1);
         }
+        JLabel info = new JLabel(str);
+        playerInfo.add(info);
+        playerInfo.setVisible(showStats);
+
     }
 
     public void updateWorldInfo()
@@ -140,21 +156,34 @@ public class GUI implements KeyListener {
 
     }
 
+    public void updateOptionMenu()
+    {
+        updateMenus();
+        System.out.println(logic.getChamber().getFocus());
+
+    }
+
     public void updateTempMenus()
     {
         tempMenus.removeAll();
         Chamber currChamber = logic.getChamber();
         ArrayList<Object> options  = currChamber.getOptions();
+        if(options.size() < 1) {
+            tempMenuLayout.setRows(1);
+        } else {
+            tempMenuLayout.setRows(options.size());
+        }
+        tempMenuLayout.setColumns(1);
         if(checkifEverythingisOfString(options))
         {
-            for (Object op: options) {
-                String str = (String) op;
+            for (int i = 0; i < options.size(); i++) {
+                String str = (String) options.get(i);
                 JLabel screenOption = new JLabel(str);
                 screenOption.setFont( new Font("Helvetica", Font.BOLD, 20));
                 screenOption.setForeground(Color.CYAN);
                 tempMenuOptions.add(screenOption);
                 //screenOption.setBorder(BorderFactory.createLineBorder());
-                tempMenus.add(screenOption, BorderLayout.PAGE_END);
+                tempMenus.add(screenOption);
             }
         } else if (checkifEverythingisOfHammer(options)) {
             for (int i = 0; i < options.size(); i++) {
@@ -163,6 +192,10 @@ public class GUI implements KeyListener {
                 String str = "<html>";
                 for (int j = 0; j < hammerStr.length(); j++) {
                     int comma = hammerStr.indexOf(",");
+                    if(comma < 0)
+                    {
+                        break;
+                    }
                     str += hammerStr.substring(0, comma) + "<br>";
                     hammerStr = hammerStr.substring(comma+1);
                 }
@@ -172,7 +205,7 @@ public class GUI implements KeyListener {
                 screenOption.setForeground(Color.CYAN);
                 tempMenuOptions.add(screenOption);
                 //screenOption.setBorder(BorderFactory.createLineBorder());
-                tempMenus.add(screenOption, BorderLayout.PAGE_END);
+                tempMenus.add(screenOption);
             }
 
         } else if (checkifEverythingisOfExtiguisher(options)) {
@@ -182,6 +215,10 @@ public class GUI implements KeyListener {
                 String str = "<html>";
                 for (int j = 0; j < extinguisherStr.length(); j++) {
                     int comma = extinguisherStr.indexOf(",");
+                    if(comma < 0)
+                    {
+                        break;
+                    }
                     str += extinguisherStr.substring(0, comma) + "<br>";
                     extinguisherStr = extinguisherStr.substring(comma+1);
                 }
@@ -191,7 +228,7 @@ public class GUI implements KeyListener {
                 screenOption.setForeground(Color.CYAN);
                 tempMenuOptions.add(screenOption);
                 //screenOption.setBorder(BorderFactory.createLineBorder());
-                tempMenus.add(screenOption, BorderLayout.PAGE_END);
+                tempMenus.add(screenOption);
             }
         }
         tempMenus.setVisible(true);
@@ -244,10 +281,7 @@ public class GUI implements KeyListener {
         }
     }
 
-    public void showStats()
-    {
 
-    }
 
     public void updateRoom()
     {
@@ -328,6 +362,8 @@ public class GUI implements KeyListener {
     public void subMenuMovement()
     {
         updateMenus();
+        logic.getChamber().setFocus(InputFocus.SelectionMenu);
+
         if(selection == KeyEvent.VK_UP)
         {
             currOption++;
@@ -335,6 +371,8 @@ public class GUI implements KeyListener {
             {
                 currOption = tempMenuOptions.size()-1;
             }
+            System.out.println("up");
+            logic.getChamber().setFocus(InputFocus.SelectionMenu);
             selectionTempMenu();
         } else if (selection == KeyEvent.VK_DOWN) {
             currOption--;
@@ -342,10 +380,26 @@ public class GUI implements KeyListener {
             {
                 currOption = 0;
             }
+            System.out.println("down");
+            logic.getChamber().setFocus(InputFocus.SelectionMenu);
             selectionTempMenu();
         } else if (selection == KeyEvent.VK_ENTER)
         {
+            System.out.println(logic.getChamber().getSms());
             logic.getChamber().setSelection(currOption);
+            if (logic.getChamber().getSms() == SubMenuSelection.YNStart) {
+                logic.getChamber().setFocus(InputFocus.SelectionMenu);
+                logic.getChamber().subMenYNStartWall(this);
+            } else if (logic.getChamber().getSms() == SubMenuSelection.ItemPick)
+            {
+                logic.getChamber().setFocus(InputFocus.SelectionMenu);
+                logic.getChamber().subMenItemPickWall(this);
+            } else if (logic.getChamber().getSms() == SubMenuSelection.YNStayStill) {
+                logic.getChamber().setFocus(InputFocus.SelectionMenu);
+                logic.getChamber().stayStill();
+                updateGameScreen();
+            }
+
         }
     }
 
@@ -362,33 +416,44 @@ public class GUI implements KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
+        System.out.println(logic.getChamber().getFocus());
         //if s pressed then show player stats
         //System.out.println("hi");
-        if(logic.getChamber().getFocus() == InputFocus.SelectionMenu)
+        if(e.getKeyCode() == KeyEvent.VK_P)
         {
-            updateMenus();
-            selection = e.getKeyCode();
-            subMenuMovement();
-        } else if(logic.getChamber().getFocus() == InputFocus.GameScreen)
-        {
-            System.out.println(e.getKeyCode());
+            showStats = !showStats;
             logic.setChamberInput(e.getKeyCode());
-            logic.getChamber().game();
-            if(logic.isCurrRoomClear())
+        } else {
+            if(logic.getChamber().getFocus() == InputFocus.SelectionMenu)
             {
-                logic.setCurrRoomNum(logic.getCurrRoomNum()+1);
-                worldText = "<html></html>";
-                worldInfo.setText(worldText);
-                worldInfo.removeAll();
-            }
-        } else
-        {
-            updateMenus();
+                System.out.println("hihihi");
+                updateMenus();
+                selection = e.getKeyCode();
+                subMenuMovement();
+            } else if(logic.getChamber().getFocus() == InputFocus.GameScreen)
+            {
+                System.out.println(e.getKeyCode());
+                if(e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_RIGHT) {
+                    logic.setChamberInput(e.getKeyCode());
+                    logic.getChamber().game(this);
+                }
+                if(logic.isCurrRoomClear())
+                {
+                    logic.setCurrRoomNum(logic.getCurrRoomNum()+1);
+                    worldText = "<html></html>";
+                    worldInfo.setText(worldText);
+                    worldInfo.removeAll();
+                }
+            } else
+            {
+                updateMenus();
 
+            }
         }
         updateGameScreen();
         updateMenus();
 
 
     }
+
 }
